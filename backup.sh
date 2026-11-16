@@ -116,7 +116,7 @@ prune_device() {
   local dir="$1" max_versions="$2" max_days="$3"
   local -a snapshots=()
   local i file now_epoch file_epoch max_age
-  mapfile -d '' -t snapshots < <(find "$dir" -maxdepth 1 -type f -name '*.conf' -printf '%T@ %p\\0' | sort -z -nr | sed -z 's/^[^ ]* //')
+  mapfile -d '' -t snapshots < <(find "$dir" -maxdepth 1 -type f -name '*.conf' -printf '%T@ %p\0' | sort -z -nr | sed -z 's/^[^ ]* //')
   now_epoch="$(date +%s)"
   max_age=$(( max_days * 86400 ))
   for ((i=0; i<${#snapshots[@]}; i++)); do
