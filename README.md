@@ -42,7 +42,7 @@ NetConfigVault/
 
 ## Requirements
 
-- Linux (Bash 4+, OpenSSH client, GNU coreutils/findutils, `flock`, `sha256sum`, `diff`).
+- Linux (Bash 4+, OpenSSH client, GNU coreutils/findutils including `timeout`, `flock`, `sha256sum`, `diff`).
 - SSH access and a dedicated read-only configuration account on each device.
 - Device host keys enrolled in the operator's `known_hosts` file.
 - Optional: `timeout` (GNU coreutils) for bounded SSH sessions.
@@ -58,7 +58,7 @@ NetConfigVault/
    chmod 600 config/inventory.tsv
    ```
 
-   (The repository includes a sample `config/inventory.tsv`; replace all example values before running.)
+   (The repository includes `config/inventory.tsv.example`; copy it to the ignored local `config/inventory.tsv`, then replace all example values and explicitly enable the devices you intend to back up.)
 4. Edit `config/inventory.tsv` with your authorized devices, then review `config/retention.conf` and vendor commands in `config/vendors.tsv`.
 5. Run a connectivity/collection test:
 
