@@ -115,14 +115,16 @@ record() {
 prune_device() {
   local dir="$1" max_versions="$2" max_days="$3"
   local -a snapshots=()
-  local i file base
-  mapfile -d '' -t snapshots < <(find "$dir" -maxdepth 1 -type f -name '*.conf' -printf '%T@ %p\0' | sort -z -nr | sed -z 's/^[^ ]* //')
+  local i file now_epoch file_epoch max_age
+  mapfile -d '' -t snapshots < <(find "$dir" -maxdepth 1 -type f -name '*.conf' -printf '%T@ %p\\0' | sort -z -nr | sed -z 's/^[^ ]* //')
+  now_epoch="$(date +%s)"
+  max_age=$(( max_days * 86400 ))
   for ((i=0; i<${#snapshots[@]}; i++)); do
     file="${snapshots[$i]}"
-    base="$file"
-    if (( i >= max_versions )) || [[ "$file" -ot "$(date -d "$max_days days ago" '+%Y-%m-%d' 2>/dev/null || date '+%Y-%m-%d')" ]]; then
-      rm -f -- "$base" "$base.sha256" "$base.diff"
-      log "PRUNE" "Removed expired snapshot $base"
+    file_epoch="$(stat -c '%Y' "$file")"
+    if (( i >= max_versions || now_epoch - file_epoch > max_age )); then
+      rm -f -- "$file" "$file.sha256" "$file.diff"
+      log "PRUNE" "Removed expired snapshot $file"
     fi
   done
 }
