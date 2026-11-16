@@ -9,6 +9,7 @@ cp "$ROOT/config/retention.conf" "$tmp/config/retention.conf"
 cp "$ROOT/config/vendors.tsv" "$tmp/config/vendors.tsv"
 printf 'test-device\t192.0.2.5\t22\tbackup\tcisco_ios\tlab\t-\t-\ttrue\n' > "$tmp/config/inventory.tsv"
 chmod 600 "$tmp/config/inventory.tsv"
+sed -i 's/RETENTION_MAX_VERSIONS=20/RETENTION_MAX_VERSIONS=1/' "$tmp/config/retention.conf"
 
 cat > "$tmp/bin/ssh" <<'MOCK'
 #!/usr/bin/env bash
@@ -27,5 +28,18 @@ mapfile -t snapshots < <(find "$tmp/backups" -name '*.conf' -type f)
 [[ "${#snapshots[@]}" -eq 1 ]]
 [[ -s "${snapshots[0]}.sha256" ]]
 (cd "$(dirname "${snapshots[0]}")" && sha256sum -c "$(basename "${snapshots[0]}").sha256")
-grep -q $'test-device\t192.0.2.5\tcisco_ios\tSUCCESS' "$tmp/reports/"*.tsv
+grep -q 
+test-device\t192.0.2.5\tcisco_ios\tSUCCESS' "$tmp/reports/"*.tsv
+
+# A second distinct capture should produce a diff and enforce max-versions=1.
+cat > "$tmp/bin/ssh" <<'MOCK'
+#!/usr/bin/env bash
+printf 'version 17.9\nhostname lab-router-changed\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n'
+MOCK
+"$tmp/backup.sh"
+mapfile -t snapshots < <(find "$tmp/backups" -name '*.conf' -type f)
+[[ "${#snapshots[@]}" -eq 1 ]]
+diffs=( "$tmp/backups/cisco_ios/lab/test-device/"*.diff )
+[[ -s "${diffs[0]}" ]]
+(cd "$(dirname "${snapshots[0]}")" && sha256sum -c "$(basename "${snapshots[0]}").sha256")
 echo "All NetConfigVault smoke tests passed."
