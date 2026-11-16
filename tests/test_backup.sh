@@ -28,8 +28,7 @@ mapfile -t snapshots < <(find "$tmp/backups" -name '*.conf' -type f)
 [[ "${#snapshots[@]}" -eq 1 ]]
 [[ -s "${snapshots[0]}.sha256" ]]
 (cd "$(dirname "${snapshots[0]}")" && sha256sum -c "$(basename "${snapshots[0]}").sha256")
-grep -q 
-test-device\t192.0.2.5\tcisco_ios\tSUCCESS' "$tmp/reports/"*.tsv
+grep -q $'test-device\t192.0.2.5\tcisco_ios\tSUCCESS' "$tmp/reports/"*.tsv
 
 # A second distinct capture should produce a diff and enforce max-versions=1.
 cat > "$tmp/bin/ssh" <<'MOCK'
