@@ -1,0 +1,11 @@
+# Never commit real network configurations, credentials, logs, or runtime data.
+backups/
+logs/
+reports/
+config/inventory.local.tsv
+config/inventory.tsv
+.netconfigvault.lock
+*.conf.sha256
+*.conf.diff
+*.capture.*
+*.stderr
