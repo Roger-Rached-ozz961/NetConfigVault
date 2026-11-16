@@ -1,0 +1,17 @@
+name: Shell validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Bash syntax
+        run: bash -n backup.sh tests/test_backup.sh
+      - name: Run mocked backup smoke tests
+        run: bash tests/test_backup.sh
