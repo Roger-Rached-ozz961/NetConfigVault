@@ -63,7 +63,7 @@ while (($#)); do
   esac
 done
 
-for cmd in ssh sha256sum diff find sort flock stat date mktemp; do
+for cmd in ssh sha256sum diff find sort flock stat date mktemp timeout; do
   command -v "$cmd" >/dev/null 2>&1 || die "Missing required command: $cmd"
 done
 require_file "$INVENTORY"
@@ -154,7 +154,7 @@ process_device() {
 
   outdir="$BACKUP_ROOT/$vendor/$group/$name"
   if [[ "$DRY_RUN" == true ]]; then
-    ((total+=1)); record "$name" "$host" "$vendor" "DRY_RUN" "$outdir" "validated; no SSH or pruning performed"; return
+    record "$name" "$host" "$vendor" "DRY_RUN" "$outdir" "validated; no SSH or pruning performed"; return
   fi
   mkdir -p "$outdir"; chmod 700 "$outdir"
   ssh_args=(-T -p "$port" -o BatchMode=yes -o ConnectTimeout="$CONNECT_TIMEOUT"
@@ -184,7 +184,9 @@ process_device() {
   fi
   previous="$(find "$outdir" -maxdepth 1 -type f -name '*.conf' ! -name "$(basename "$outfile")" -printf '%T@ %p\n' | sort -nr | head -n1 | cut -d' ' -f2- || true)"
   if [[ -n "$previous" ]]; then
-    if ! diff -u --label "previous:$(basename "$previous")" --label "current:$(basename "$outfile")" "$previous" "$tmpfile" > "$tmpfile.diff"; then
+    if diff -u --label "previous:$(basename "$previous")" --label "current:$(basename "$outfile")" "$previous" "$tmpfile" > "$tmpfile.diff"; then
+      :
+    else
       # diff exit 1 means changes; exit >1 means an operational error.
       diff_rc=$?
       if (( diff_rc > 1 )); then
