@@ -27,5 +27,7 @@ mapfile -t snapshots < <(find "$tmp/backups" -name '*.conf' -type f)
 [[ "${#snapshots[@]}" -eq 1 ]]
 [[ -s "${snapshots[0]}.sha256" ]]
 (cd "$(dirname "${snapshots[0]}")" && sha256sum -c "$(basename "${snapshots[0]}").sha256")
-grep -q $'SUCCESS\ttest-device' "$tmp/reports/"*.tsv
+grep -q 
+echo "All NetConfigVault smoke tests passed."
+test-device\t192.0.2.5\tcisco_ios\tSUCCESS' "$tmp/reports/"*.tsv
 echo "All NetConfigVault smoke tests passed."
