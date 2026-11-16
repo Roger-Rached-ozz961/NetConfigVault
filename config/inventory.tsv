@@ -1,5 +1,0 @@
-# Copy this file and replace every example value. Tab-separated, exactly 9 columns.
-# name	host	port	user	vendor	group	jump_host	identity_file	enabled
-# Example values below are documentation only; do not run until replaced.
-edge-router-01	192.0.2.10	22	netbackup	cisco_ios	branch-a	-	/home/netbackup/.ssh/id_ed25519	true
-core-switch-01	192.0.2.20	22	netbackup	arista_eos	datacenter	-	/home/netbackup/.ssh/id_ed25519	false
