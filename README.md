@@ -59,7 +59,7 @@ NetConfigVault/
    ```
 
    (The repository includes a sample `config/inventory.tsv`; replace all example values before running.)
-4. Edit `config/retention.conf` and verify vendor commands in `config/vendors.tsv`.
+4. Edit `config/inventory.tsv` with your authorized devices, then review `config/retention.conf` and vendor commands in `config/vendors.tsv`.
 5. Run a connectivity/collection test:
 
    ```bash
