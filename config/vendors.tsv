@@ -1,0 +1,6 @@
+# vendor<TAB>remote command. Keep one mapping per vendor key.
+# Validate commands and privilege requirements against each device/firmware.
+cisco_ios	show running-config
+juniper_junos	show configuration | display set
+arista_eos	show running-config
+mikrotik_routeros	/export
