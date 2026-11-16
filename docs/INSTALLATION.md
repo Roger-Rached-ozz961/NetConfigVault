@@ -44,7 +44,7 @@ Treat `ssh-keyscan` output as unverified until its fingerprint is checked agains
 
 ## 4. Configure inventory and commands
 
-Edit `config/inventory.tsv` and replace example addresses, usernames, groups, and identity paths. The sample includes a disabled row as a template. Inventory columns are tab-separated and must remain in this order:
+Copy the sample inventory, then edit the local copy and replace example addresses, usernames, groups, and identity paths. The sample device is disabled by default:\n\n```bash\ncp config/inventory.tsv.example config/inventory.tsv\nchmod 600 config/inventory.tsv\n``` Inventory columns are tab-separated and must remain in this order:
 
 1. name — safe device identifier
 2. host — DNS name or IP address
