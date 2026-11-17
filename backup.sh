@@ -91,7 +91,7 @@ flock -n 9 || die "Another NetConfigVault run is active"
 vendor_command() {
   local wanted="$1" line key value
   while IFS=$'\t' read -r key value; do
-    [[ -z "$key" || "$key" == #* ]] && continue
+    [[ -z "$key" || "$key" == \#* ]] && continue
     if [[ "$key" == "$wanted" ]]; then printf '%s' "$value"; return 0; fi
   done < "$VENDOR_MAP"
   return 1
@@ -209,7 +209,7 @@ process_device() {
 }
 
 while IFS=$'\t' read -r name host port user vendor group jump identity enabled; do
-  [[ -z "$name" || "$name" == #* ]] && continue
+  [[ -z "$name" || "$name" == \#* ]] && continue
   if [[ -n "$FILTER_DEVICE" && "$name" != "$FILTER_DEVICE" ]]; then continue; fi
   ((total+=1))
   process_device "$name" "$host" "$port" "$user" "$vendor" "$group" "$jump" "$identity" "$enabled"
